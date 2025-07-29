@@ -1,6 +1,6 @@
-namespace Quiz.Application.DTOs.QuestionDtos.ResultDtos;
+namespace Quiz.Application.CQRS.Results.Questions;
 
-public class GetQuestionResultDto
+public class GetQuestionsQueryResult
 {
     public Guid QuestionId { get; set; }
     public string QuestionText { get; set; }

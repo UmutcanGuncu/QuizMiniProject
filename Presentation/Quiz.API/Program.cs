@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quiz.Application.Abstractions;
+using Quiz.Application.CQRS.Handlers.Questions;
 using Quiz.Domain.Entities;
 using Quiz.Persistence.Contexts;
 using Quiz.Persistence.Services;
@@ -10,8 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddMediatR(opt => opt.RegisterServicesFromAssemblies(
-    typeof(Program).Assembly));
+    typeof(Program).Assembly,
+    typeof(AnswerQuestionCommandHandler).Assembly));
 builder.Services.AddDbContext<QuizDbContext>(options =>
     options.UseInMemoryDatabase("QuizDB"));
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
@@ -20,8 +24,9 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
     
 }) .AddEntityFrameworkStores<QuizDbContext>()
 .AddDefaultTokenProviders();
-builder.Services.AddScoped<IQuestionService, QuestionService>();
 
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {

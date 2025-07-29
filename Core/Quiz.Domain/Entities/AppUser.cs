@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Quiz.Domain.Entities;
 
-public class AppUser
+public class AppUser :IdentityUser<Guid>
 {
-    
+    public string NameSurname { get; set; }
 }
