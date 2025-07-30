@@ -8,7 +8,7 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Quiz.Persistence.Services;
 
-public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IMapper mapper) : IAuthService
+public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IMapper mapper, IRoleService roleService, ITokenService tokenService) : IAuthService
 {
     
     public async Task<RegisterUserResponseDto> RegisterUserAsync(RegisterUserDto dto)
@@ -18,6 +18,8 @@ public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUse
         var result = await userManager.CreateAsync(user, dto.Password);
         if (result.Succeeded)
         {
+            AppUser appUser = await userManager.FindByNameAsync(dto.Email);
+            await roleService.AssignUserToRoleAsync(user, "User");
             return new()
             {
                 IsSuccess = true,
@@ -45,10 +47,12 @@ public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUse
         if (signInResult.Succeeded)
         {
             await signInManager.PasswordSignInAsync(user, dto.Password, true, false);
+            var token = await tokenService.CreateAccessTokenAsync(user.Id.ToString());
             return new()
             {
                 IsSuccess = true,
                 Message = "Giriş İşlemi Başarıyla Gerçekleştirilmiştir",
+                Token = token,
                 UserId = user.Id
             };
         }

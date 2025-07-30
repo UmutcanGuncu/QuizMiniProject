@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quiz.Application.Abstractions;
 using Quiz.Application.CQRS.Commands.Auths;
@@ -8,6 +9,7 @@ namespace Quiz.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[AllowAnonymous]
 public class AuthController(IAuthService authService, IMediator mediator) : ControllerBase
 {
     [HttpPost("[action]")]

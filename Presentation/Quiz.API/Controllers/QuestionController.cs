@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quiz.Application.Abstractions;
 using Quiz.Application.CQRS.Commands.Questions;
@@ -9,9 +10,11 @@ using Quiz.Persistence.Contexts;
 namespace Quiz.API.Controllers;
 
 [Route("api")]
+[ApiController]
 public class QuestionController(IMediator mediator) : ControllerBase
 {
     [HttpGet("questions")]
+    [AllowAnonymous]
     public async Task<IActionResult> QuestionList()
     {
         var questions = await mediator.Send(new GetQuestionsQuery());
@@ -19,6 +22,7 @@ public class QuestionController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("question/random")]
+    [Authorize(Roles = "Admin, User")]
     public async Task<IActionResult> RandomQuestion()
     {
         var result = await mediator.Send(new GetRandomQuestionQuery());
@@ -26,6 +30,7 @@ public class QuestionController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("answer")]
+    [Authorize(Roles = "Admin, User")]
     public async Task<IActionResult> AnswerQuestion(AnswerQuestionCommandRequest answerQuestionCommandRequest)
     {
         var result = await mediator.Send(answerQuestionCommandRequest);

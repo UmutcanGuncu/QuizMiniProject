@@ -4,6 +4,6 @@ namespace Quiz.Application.Abstractions;
 
 public interface ITokenService
 {
-    Task<Token> CreateAccessToken(string userId);
+    Task<Token> CreateAccessTokenAsync(string userId);
     
 }
