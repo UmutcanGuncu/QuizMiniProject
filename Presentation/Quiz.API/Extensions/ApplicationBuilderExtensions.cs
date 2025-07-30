@@ -10,7 +10,10 @@ public static class ApplicationBuilderExtensions
     public static async Task SeedDataAsync(this IApplicationBuilder app)
     {
         using (var scope = app.ApplicationServices.CreateScope())
-        {
+        { 
+            // Program ayağa kaldırılırken Admin, User rollerinin tanımlanması işlemleri
+            // gerçekleştirildi. Admin kullanıcısı oluşturuldu.
+            // Sorular listesi oluşturulup in memory veri tabanına aktarıldı
             var context = scope.ServiceProvider.GetRequiredService<QuizDbContext>();
             var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();

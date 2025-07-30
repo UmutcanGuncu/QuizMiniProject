@@ -9,6 +9,7 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace Quiz.Persistence.Services;
 
+// jwt token oluşturma işlemleri gerçekleştirildi
 public class TokenService(IConfiguration configuration, IRoleService roleService) : ITokenService
 {
     public async Task<Token> CreateAccessTokenAsync(string userId)

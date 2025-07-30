@@ -5,6 +5,7 @@ using Quiz.Domain.Entities;
 
 namespace Quiz.Persistence.Services;
 
+// rol oluşturma, kullanıcıya rol atama ve kullanıcıların rollerinin IEnurable<Claim> şeklinde gönderme işlemleri gerçekleştirildi
 public class RoleService(RoleManager<AppRole> roleManager, UserManager<AppUser> userManager) : IRoleService
 {
     public async Task CreateRolesAsync()

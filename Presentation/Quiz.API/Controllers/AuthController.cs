@@ -10,7 +10,7 @@ namespace Quiz.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [AllowAnonymous]
-public class AuthController(IAuthService authService, IMediator mediator) : ControllerBase
+public class AuthController(IMediator mediator) : ControllerBase
 {
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser(RegisterUserCommandRequest registerUserCommandRequest)
@@ -18,7 +18,7 @@ public class AuthController(IAuthService authService, IMediator mediator) : Cont
         var result = await mediator.Send(registerUserCommandRequest);
         if(result.IsSuccess)
             return Ok(result);
-        return BadRequest(result);
+        return NotFound(result);
     }
 
     [HttpPost("[action]")]
@@ -27,6 +27,6 @@ public class AuthController(IAuthService authService, IMediator mediator) : Cont
         var result = await mediator.Send(loginUserCommandRequest);
         if(result.IsSuccess)
             return Ok(result);
-        return BadRequest(result);
+        return NotFound(result);
     }
 }

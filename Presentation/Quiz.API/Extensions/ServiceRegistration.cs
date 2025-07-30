@@ -15,6 +15,8 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //Kütüphanelerin konfigürasyonları yapıldı
+        //Dependency injection uygulandı
         services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddMediatR(opt => opt.RegisterServicesFromAssemblies(
