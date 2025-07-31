@@ -18,6 +18,8 @@ public class QuestionController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> QuestionList()
     {
         var questions = await mediator.Send(new GetQuestionsQuery());
+        if(questions is null)
+            return NotFound();
         return Ok(questions);
     }
 
@@ -26,6 +28,8 @@ public class QuestionController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> RandomQuestion()
     {
         var result = await mediator.Send(new GetRandomQuestionQuery());
+        if (result is null)
+            return NotFound();
         return Ok(result);
     }
 

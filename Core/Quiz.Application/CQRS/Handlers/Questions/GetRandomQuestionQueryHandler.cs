@@ -7,9 +7,9 @@ using Quiz.Application.DTOs.QuestionDtos.ResultDtos;
 
 namespace Quiz.Application.CQRS.Handlers.Questions;
 
-public class GetRandomQuestionQueryHandler(IQuestionService questionService, IMapper mapper) : IRequestHandler<GetRandomQuestionQuery, GetRandomQuestionQueryResult>
+public class GetRandomQuestionQueryHandler(IQuestionService questionService, IMapper mapper) : IRequestHandler<GetRandomQuestionQuery, GetRandomQuestionQueryResult?>
 {
-    public async Task<GetRandomQuestionQueryResult> Handle(GetRandomQuestionQuery request, CancellationToken cancellationToken)
+    public async Task<GetRandomQuestionQueryResult?> Handle(GetRandomQuestionQuery request, CancellationToken cancellationToken)
     {
         var dto = await questionService.GetRandomQuestionAsync();
         var result = mapper.Map<GetRandomQuestionQueryResult>(dto);

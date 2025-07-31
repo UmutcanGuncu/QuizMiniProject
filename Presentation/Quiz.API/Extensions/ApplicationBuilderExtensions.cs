@@ -21,7 +21,7 @@ public static class ApplicationBuilderExtensions
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
             if (!context.Questions.Any())
-            {
+            {  
                 var questions = new List<Question>()
                 {
                     new Question()
@@ -180,6 +180,7 @@ public static class ApplicationBuilderExtensions
                 };
                 await context.Questions.AddRangeAsync(questions);
                 await context.SaveChangesAsync();
+              
                 await roleService.CreateRolesAsync();
                 AppUser user = new()
                 {
@@ -192,8 +193,8 @@ public static class ApplicationBuilderExtensions
                 await userManager.CreateAsync(user, "Umut135.");
                 await userManager.AddToRoleAsync(user, "Admin");
                 
-                } 
-                }
+            } 
+        }
 
     }
 }

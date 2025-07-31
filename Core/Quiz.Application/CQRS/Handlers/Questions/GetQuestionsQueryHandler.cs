@@ -5,11 +5,13 @@ using Quiz.Application.CQRS.Results.Questions;
 
 namespace Quiz.Application.CQRS.Handlers.Questions;
 
-public class GetQuestionsQueryHandler(IQuestionService questionService) : IRequestHandler<GetQuestionsQuery, IEnumerable<GetQuestionsQueryResult>>
+public class GetQuestionsQueryHandler(IQuestionService questionService) : IRequestHandler<GetQuestionsQuery, IEnumerable<GetQuestionsQueryResult>?>
 {
-    public async Task<IEnumerable<GetQuestionsQueryResult>> Handle(GetQuestionsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetQuestionsQueryResult>?> Handle(GetQuestionsQuery request, CancellationToken cancellationToken)
     {
         var results = await questionService.GetAllQuestionsAsync();
+        if(results is null)
+            return null;
         return results.Select(x=> new GetQuestionsQueryResult()
         {
             QuestionId = x.QuestionId,

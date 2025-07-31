@@ -8,9 +8,11 @@ namespace Quiz.Persistence.Services;
 
 public class QuestionService(QuizDbContext context) : IQuestionService
 {
-    public async Task<IEnumerable<GetQuestionResultDto>> GetAllQuestionsAsync()
+    public async Task<IEnumerable<GetQuestionResultDto>?> GetAllQuestionsAsync()
     {
         var questions = await context.Questions.OrderBy(x=>x.CreatedAt).ToListAsync();
+        if(questions.Count == 0)
+            return null;
         return questions.Select(x => new GetQuestionResultDto()
         {
             QuestionId = x.Id,
@@ -20,11 +22,13 @@ public class QuestionService(QuizDbContext context) : IQuestionService
         });
     }
 
-    public async Task<GetRandomQuestionResultDto> GetRandomQuestionAsync()
+    public async Task<GetRandomQuestionResultDto?> GetRandomQuestionAsync()
     {
         var questions = await context.Questions.OrderBy(x=>x.CreatedAt).ToListAsync();
+        if (questions.Count == 0)
+            return null;
         Random random = new Random();
-        int number = random.Next(0, questions.Count+1);
+        int number = random.Next(0, questions.Count);
         
         var result = questions[number];
         return new GetRandomQuestionResultDto()
