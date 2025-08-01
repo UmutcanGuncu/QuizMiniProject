@@ -47,7 +47,7 @@ Bu proje, **Clean Architecture** prensiplerine uygun, JWT tabanlı kimlik doğru
 4️⃣ Uygulamayı başlat
 
 ```bash
-git clone https://github.com/kullaniciadi/quiz-app.git
+git clone https://github.com/UmutcanGuncu/QuizMiniProject
 cd quiz-app
 dotnet ef database update
 dotnet run --project Presentation/Quiz.API
@@ -70,3 +70,4 @@ Swagger arayüzü: [https://localhost:7163/swagger](https://localhost:7163/swagg
 
 > **Not:** JWT Authentication gerektiren endpointlerde `Authorization: Bearer <token>` başlığı kullanılmalıdır.
 
+Github Linki : https://github.com/UmutcanGuncu/QuizMiniProject
