@@ -1,6 +1,7 @@
 using AutoMapper;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Quiz.Application.Abstractions;
 using Quiz.Application.DTOs.AuthenticationDtos.Request;
 using Quiz.Application.DTOs.AuthenticationDtos.Response;
@@ -9,7 +10,7 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Quiz.Persistence.Services;
 
-public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IMapper mapper, IRoleService roleService, ITokenService tokenService) : IAuthService
+public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IMapper mapper, IRoleService roleService, ITokenService tokenService, IConfiguration configuration) : IAuthService
 {
     // Kayıt olma ve giriş yapma işlemleri gerçekleştirildi
     public async Task<RegisterUserResponseDto> RegisterUserAsync(RegisterUserDto dto)
@@ -69,7 +70,7 @@ public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUse
     {
         var settings = new GoogleJsonWebSignature.ValidationSettings()
         {
-            Audience = new List<String> { "487840124789-u67bq4e0ko94s23bgjen8k0o6hgl1vlk.apps.googleusercontent.com" } // google login işlemi için gerekli adres bilgisi ayarlandı
+            Audience = new List<String> { $"{configuration["GoogleAuth:ClientId"]}" } // google login işlemi için gerekli adres bilgisi ayarlandı
         };
         var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken,settings);
         var info = new UserLoginInfo(dto.Provider, payload.Subject, dto.Provider);
