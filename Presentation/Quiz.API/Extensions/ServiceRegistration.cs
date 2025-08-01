@@ -44,6 +44,16 @@ public static class ServiceRegistration
         });
         services.AddOpenApi();
         services.AddControllers();
+        services.AddCors(opt =>
+        {
+            opt.AddPolicy("Frontend", policy =>
+            {
+                policy.WithOrigins("http://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
         //Kütüphanelerin konfigürasyonları yapıldı
         //Dependency injection uygulandı
         services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());

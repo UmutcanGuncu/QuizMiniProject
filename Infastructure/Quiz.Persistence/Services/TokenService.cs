@@ -15,11 +15,17 @@ public class TokenService(IConfiguration configuration, IRoleService roleService
 {
     public async Task<Token> CreateAccessTokenAsync(string userId)
     {
+        // Token sınıfından yeni nesne oluşturuldu
         Token token = new();
+        //SymetricSecurityKey bilgisi verildi. Appsettings.Json dosyassında bulunan key bilgisi byte formatına dönüştürüldü
         SymmetricSecurityKey securityKey = new (Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
+        // Byte türüne dönüştürülmüş olan SymmetricSecurityKey'in şifreleme algoritması belirtildi
         SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
+        //Token'in geçerlilik süresi belirtildi
         token.Expiration = DateTime.UtcNow.AddDays(3);
+        //Kullanıcının rol bilgileri getirildi
         var roleClaims = await roleService.GetUserClaimsAsync(userId);
+        //kullanıcı bilgisi getirildi
         AppUser? user = await userService.FindUserAsync(userId);
         var claims = new List<Claim>
         {

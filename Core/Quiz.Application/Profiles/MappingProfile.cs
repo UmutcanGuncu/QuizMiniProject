@@ -23,5 +23,7 @@ public class MappingProfile: Profile
       CreateMap<RegisterUserResponseDto, RegisterUserCommandResult>();
       CreateMap<LoginUserCommandRequest, LoginUserDto>();
       CreateMap<LoginUserResponseDto, LoginUserCommandResult>();
+      CreateMap<GoogleLoginCommandRequest, GoogleLoginDto>();
+      CreateMap<GoogleLoginResponseDto, GoogleLoginCommandResult>();
    }
 }

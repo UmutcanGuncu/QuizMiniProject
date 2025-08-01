@@ -69,7 +69,7 @@ public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUse
     {
         var settings = new GoogleJsonWebSignature.ValidationSettings()
         {
-            Audience = new List<String> { "" } // google login işlemi için gerekli adres bilgisi ayarlandı
+            Audience = new List<String> { "487840124789-u67bq4e0ko94s23bgjen8k0o6hgl1vlk.apps.googleusercontent.com" } // google login işlemi için gerekli adres bilgisi ayarlandı
         };
         var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken,settings);
         var info = new UserLoginInfo(dto.Provider, payload.Subject, dto.Provider);
@@ -77,7 +77,7 @@ public class AuthService(SignInManager<AppUser> signInManager,UserManager<AppUse
         bool result = appUser != null;
         if (appUser == null)
         {
-            appUser = await userManager.FindByEmailAsync(dto.Email);
+            appUser = await userManager.FindByEmailAsync(payload.Email);
             if (appUser == null)
             {
                 appUser = new()

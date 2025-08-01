@@ -10,5 +10,17 @@ public class QuizDbContext : IdentityDbContext<AppUser,AppRole,Guid>
     {
     }
     public DbSet<Question> Questions { get; set; }
-   
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        ChangeTracker.Entries().ToList().ForEach(entry =>
+        {
+            if (entry.Entity is AppUser appUser)
+            {
+                if (entry.State == EntityState.Added)
+                    appUser.Points = 0;
+                
+            }
+        });
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }

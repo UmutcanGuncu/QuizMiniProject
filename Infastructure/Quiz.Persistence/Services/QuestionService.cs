@@ -6,7 +6,7 @@ using Quiz.Persistence.Contexts;
 
 namespace Quiz.Persistence.Services;
 
-public class QuestionService(QuizDbContext context) : IQuestionService
+public class QuestionService(QuizDbContext context, IUserService userService) : IQuestionService
 {
     public async Task<IEnumerable<GetQuestionResultDto>?> GetAllQuestionsAsync()
     {
@@ -40,19 +40,38 @@ public class QuestionService(QuizDbContext context) : IQuestionService
         };
     }
 
-    public async Task<AnswerQuestionResultDto> AnswerQuesionAsync(AnswerQuestionDto answerQuestionDto)
+    public async Task<AnswerQuestionResultDto?> AnswerQuesionAsync(AnswerQuestionDto answerQuestionDto)
     {
+        // Gönderilen soru id'si ile eşleşen soru olup olmadığı kontrol edilmektedir.
         var question = await context.Questions.FindAsync(answerQuestionDto.QuestionId);
+        // Eşleşen soru bulunmaması durumunda null döndürülmektedir.
         if (question == null)
             return null;
-        if (question.CorrectAnswer == answerQuestionDto.SelectedOption)
+        int? totalUserPoint;
+        // Soru bulunması durumunda sorunun cevabı ile kullanıcının cevabı karşılaştırılmaktadır
+        if (question.CorrectAnswer == answerQuestionDto.SelectedOption) 
+        {
+            // Kullanıcı 60 saniyenin altında cevaplarsa 10 puan almakta eğer daha uzun sürede cevaplarsa 0 puan almaktadır
+            bool inTime = (DateTime.UtcNow - answerQuestionDto.Created).TotalSeconds <= 60;
+            if (inTime)
+                  totalUserPoint = await userService.UpdateUserPointAsync(10);
+            else
+            {
+                totalUserPoint = await userService.UpdateUserPointAsync(0);
+            }
+           
             return new AnswerQuestionResultDto()
             {
-                Corrected = true
+                Corrected = true,
+                TotalPoint = totalUserPoint
             };
+        }
+        totalUserPoint = await userService.UpdateUserPointAsync(0);
+           // Cevabın yanlış olması durumunda geri döndürülecek sınıf
         return new AnswerQuestionResultDto()
         {
-            Corrected = false
+            Corrected = false,
+            TotalPoint = totalUserPoint
         };
     }
 }

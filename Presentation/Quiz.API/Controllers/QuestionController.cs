@@ -38,6 +38,8 @@ public class QuestionController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> AnswerQuestion(AnswerQuestionCommandRequest answerQuestionCommandRequest)
     {
         var result = await mediator.Send(answerQuestionCommandRequest);
+        if(result is null)
+            return NotFound();
         return Ok(result);
     }
 

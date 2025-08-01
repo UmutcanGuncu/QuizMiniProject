@@ -10,11 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 var logger = new LoggerConfiguration() // Serilogu implemente edecek
     .WriteTo.Console() // nereye loglama yapacağımızı belirtiyoruz
-    .WriteTo.File("logs/log.txt")
-    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("DefaultConnection"),
+    .WriteTo.File("logs/log.txt") //logs.txt dosyasına kayıt yapılmasını sağlar
+    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("DefaultConnection"), //appsetting.json 
+        //dosyası içindeki defaultconnection parametresinde veri tabanı ayarları bildirilmiştir
         "logs",
         needAutoCreateTable:true,
-        columnOptions: new Dictionary<string, ColumnWriterBase>
+        columnOptions: new Dictionary<string, ColumnWriterBase> // tablodaki sütünların ayarlanması
         {
             {"message", new RenderedMessageColumnWriter()},
             {"level", new LevelColumnWriter()},
@@ -40,13 +41,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors("Frontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.Use(async (context, next) =>
 {
+    // sisteme giriş yapan kullanıcının kullanıcı adının loglama için kullanılan veri tabanına kayıt edilmesi
+    
     var username = context.User?.Identity?.IsAuthenticated !=null ? context.User.Identity?.Name : "Anonymous";
-    LogContext.PushProperty("user_name", username);
+    LogContext.PushProperty("user_name", username); // alınan kullanıcı adı logs veri tabanındaki user_name 
+    //alanına kayıt edilir
     await next();;
 });
 app.MapControllers();

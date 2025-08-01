@@ -17,7 +17,8 @@ public class AnswerQuestionCommandHandler(IQuestionService questionService, IMap
             return null;
         return new()
         {
-            Corrected = result.Corrected
+            Corrected = result.Corrected,
+            TotalPoint = result.TotalPoint
         };
     }
 }

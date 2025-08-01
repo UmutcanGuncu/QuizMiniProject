@@ -29,4 +29,13 @@ public class AuthController(IMediator mediator) : ControllerBase
             return Ok(result);
         return NotFound(result);
     }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> GoogleLogin(GoogleLoginCommandRequest googleLoginCommandRequest)
+    {
+        var result = await mediator.Send(googleLoginCommandRequest);
+        if (result.Succeeded)
+            return Ok(result);
+        return NotFound(result);
+    }
 }
